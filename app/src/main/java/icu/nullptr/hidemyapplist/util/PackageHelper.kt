@@ -38,7 +38,8 @@ object PackageHelper {
     class PackageCache(
         val info: PackageInfo,
         val label: String,
-        val icon: Bitmap
+        val icon: Bitmap,
+        val isXposedModule: Boolean
     )
 
     private object Comparators {
@@ -94,7 +95,8 @@ object PackageHelper {
                         packageInfo.applicationInfo?.let { appInfo ->
                             val label = packageManagerDelegate.getApplicationLabel(appInfo).toString()
                             val icon = hmaApp.appIconLoader.loadIcon(appInfo)
-                            it[packageInfo.packageName] = PackageCache(packageInfo, label, icon)
+                            val isXposedModule = appInfo.metaData?.getBoolean("xposedmodule", false) ?: false
+                            it[packageInfo.packageName] = PackageCache(packageInfo, label, icon, isXposedModule)
                         }
                     }
                 }
@@ -134,13 +136,6 @@ object PackageHelper {
     }
 
     fun isXposedModule(packageName: String): Boolean = runBlocking {
-        try {
-            val packageInfo = packageCache.first()[packageName]?.info ?: return@runBlocking false
-            val appInfo = packageInfo.applicationInfo ?: return@runBlocking false
-            val metaData = appInfo.metaData ?: return@runBlocking false
-            metaData.getBoolean("xposedmodule", false)
-        } catch (e: Exception) {
-            false
-        }
+        packageCache.first()[packageName]?.isXposedModule ?: false
     }
 }
