@@ -1,5 +1,5 @@
 import com.android.build.api.dsl.Packaging
-import java.util.*
+import java.util.Locale
 
 plugins {
     alias(libs.plugins.agp.app)
