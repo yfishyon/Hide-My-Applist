@@ -87,7 +87,7 @@ object PackageHelper {
         hmaApp.globalScope.launch {
             mRefreshing.emit(true)
             val cache = withContext(Dispatchers.IO) {
-                val packages = packageManagerDelegate.getInstalledPackages(0)
+                val packages = packageManagerDelegate.getInstalledPackages(PackageManager.GET_META_DATA)
                 mutableMapOf<String, PackageCache>().also {
                     for (packageInfo in packages) {
                         if (packageInfo.packageName in Constants.packagesShouldNotHide) continue
@@ -131,5 +131,16 @@ object PackageHelper {
 
     fun isSystem(packageName: String): Boolean = runBlocking {
         packageCache.first()[packageName]?.info?.applicationInfo?.flags?.and(ApplicationInfo.FLAG_SYSTEM) != 0
+    }
+
+    fun isXposedModule(packageName: String): Boolean = runBlocking {
+        try {
+            val packageInfo = packageCache.first()[packageName]?.info ?: return@runBlocking false
+            val appInfo = packageInfo.applicationInfo ?: return@runBlocking false
+            val metaData = appInfo.metaData ?: return@runBlocking false
+            metaData.getBoolean("xposedmodule", false)
+        } catch (e: Exception) {
+            false
+        }
     }
 }

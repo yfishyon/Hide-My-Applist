@@ -57,6 +57,7 @@
 
     <!-- App select -->
     <string name="list_show_system">Show system apps</string>
+    <string name="list_show_xposed_modules">Show Xposed modules only</string>
     <string name="list_sorting">Sorting</string>
     <string name="list_reverse_order">Reverse order</string>
     <string name="list_sort_by_label">By app name</string>

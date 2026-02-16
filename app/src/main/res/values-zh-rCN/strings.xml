@@ -53,6 +53,7 @@
     <string name="home_update">更新： %s</string>
     <!-- App select -->
     <string name="list_show_system">显示系统应用</string>
+    <string name="list_show_xposed_modules">仅显示Xposed模块</string>
     <string name="list_sorting">排序</string>
     <string name="list_reverse_order">倒序</string>
     <string name="list_sort_by_label">按应用名称</string>

@@ -50,6 +50,10 @@ abstract class AppSelectFragment : Fragment(R.layout.fragment_app_select) {
                 item.isChecked = !item.isChecked
                 PrefManager.appFilter_showSystem = item.isChecked
             }
+            R.id.menu_show_xposed_modules -> {
+                item.isChecked = !item.isChecked
+                PrefManager.appFilter_showXposedModules = item.isChecked
+            }
             R.id.menu_sort_by_label -> {
                 item.isChecked = true
                 PrefManager.appFilter_sortMethod = PrefManager.SortMethod.BY_LABEL
@@ -101,6 +105,7 @@ abstract class AppSelectFragment : Fragment(R.layout.fragment_app_select) {
             })
 
             findItem(R.id.menu_show_system).isChecked = PrefManager.appFilter_showSystem
+            findItem(R.id.menu_show_xposed_modules).isChecked = PrefManager.appFilter_showXposedModules
             when (PrefManager.appFilter_sortMethod) {
                 PrefManager.SortMethod.BY_LABEL -> findItem(R.id.menu_sort_by_label).isChecked = true
                 PrefManager.SortMethod.BY_PACKAGE_NAME -> findItem(R.id.menu_sort_by_package_name).isChecked = true
