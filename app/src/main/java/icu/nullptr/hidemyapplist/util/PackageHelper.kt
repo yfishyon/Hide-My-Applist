@@ -38,7 +38,8 @@ object PackageHelper {
     class PackageCache(
         val info: PackageInfo,
         val label: String,
-        val icon: Bitmap
+        val icon: Bitmap,
+        val isXposedModule: Boolean
     )
 
     private object Comparators {
@@ -87,14 +88,15 @@ object PackageHelper {
         hmaApp.globalScope.launch {
             mRefreshing.emit(true)
             val cache = withContext(Dispatchers.IO) {
-                val packages = packageManagerDelegate.getInstalledPackages(0)
+                val packages = packageManagerDelegate.getInstalledPackages(PackageManager.GET_META_DATA)
                 mutableMapOf<String, PackageCache>().also {
                     for (packageInfo in packages) {
                         if (packageInfo.packageName in Constants.packagesShouldNotHide) continue
                         packageInfo.applicationInfo?.let { appInfo ->
                             val label = packageManagerDelegate.getApplicationLabel(appInfo).toString()
                             val icon = hmaApp.appIconLoader.loadIcon(appInfo)
-                            it[packageInfo.packageName] = PackageCache(packageInfo, label, icon)
+                            val isXposedModule = appInfo.metaData?.getBoolean("xposedmodule", false) ?: false
+                            it[packageInfo.packageName] = PackageCache(packageInfo, label, icon, isXposedModule)
                         }
                     }
                 }
@@ -131,5 +133,9 @@ object PackageHelper {
 
     fun isSystem(packageName: String): Boolean = runBlocking {
         packageCache.first()[packageName]?.info?.applicationInfo?.flags?.and(ApplicationInfo.FLAG_SYSTEM) != 0
+    }
+
+    fun isXposedModule(packageName: String): Boolean = runBlocking {
+        packageCache.first()[packageName]?.isXposedModule ?: false
     }
 }

@@ -11,6 +11,11 @@
         android:showAsAction="never"
         android:title="@string/list_show_system" />
     <item
+        android:id="@+id/menu_show_xposed_modules"
+        android:checkable="true"
+        android:showAsAction="never"
+        android:title="@string/list_show_xposed_modules" />
+    <item
         android:showAsAction="never"
         android:title="@string/list_sorting">
         <menu>
